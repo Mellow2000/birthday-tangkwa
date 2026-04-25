@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function showPolaroidPopup() {
     polaroidImg.src = "images/7.jpg";
     polaroidCaption.textContent =
-      "🎂 ขอให้เป็นปีที่สดใส มีรอยยิ้มเยอะๆ 💖";
+      "🎂 ขอให้เป็นปีที่สดใส มีรอยยิ้มเยอะๆ เหมือนที่เธอทำให้คนรอบข้างยิ้มได้ตลอดเวลา 💖";
     polaroidPopup.classList.add("show");
   }
 
