@@ -32,11 +32,17 @@ document.addEventListener("DOMContentLoaded", function () {
   let candlesBlown = false;
   let input = "";
 
+  // 👉 swipe
+  let startX = 0;
+  let currentX = 0;
+  let diffX = 0;
+  let isDragging = false;
+
   const CORRECT_PASSWORD = "250444";
 
   const images = [
     "images/1.jpg",
-    "images/2.JPEG",
+    "images/2.jpg",
     "images/3.jpg",
     "images/4.jpg",
     "images/5.jpg",
@@ -45,36 +51,33 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const messages = [
     "สุขสันต์วันเกิดนะคับ 🎂🎁",
-    "ขอให้เธอได้เจอแต่สิ่งดีๆ 🎉",
+    "ขอให้ปีนี้หรือปีถัดๆไป เป็นปีที่ดีสำหรับเธอ 🎉",
     "การงาน การเงิน ปังๆ 💪",
     "ยิ้มเยอะๆ ในทุกวัน 😊",
     "เป็นคนสดใส ร่าเริ่ง น่ารักแบบนี้ไปตลอดเลยนะ💖",
     "🫶🏻"
   ];
 
+  // =====================
+  // PRELOAD
+  // =====================
+  images.forEach(src => {
+    const img = new Image();
+    img.src = src;
+  });
+
   function resetClasses(el) {
     el.classList.remove("active", "stack", "entering", "leaving", "out");
   }
 
   function hidePolaroidPopup() {
-    if (polaroidPopup) {
-      polaroidPopup.classList.remove("show");
-    }
+    polaroidPopup?.classList.remove("show");
   }
 
   function showPolaroidPopup() {
-    if (!polaroidPopup) return;
-
-    if (polaroidImg) {
-      polaroidImg.src =
-        "images/7.jpg";
-    }
-
-    if (polaroidCaption) {
-      polaroidCaption.textContent =
-        "🎂 ขอให้เป็นปีที่สดใส มีรอยยิ้มเยอะๆ เหมือนที่เธอทำให้คนรอบข้างยิ้มได้ตลอดเวลา 💖";
-    }
-
+    polaroidImg.src = "images/7.jpg";
+    polaroidCaption.textContent =
+      "🎂 ขอให้เป็นปีที่สดใส มีรอยยิ้มเยอะๆ 💖";
     polaroidPopup.classList.add("show");
   }
 
@@ -82,17 +85,14 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".candle").forEach((candle) => {
       candle.classList.remove("off");
       candle.setAttribute("data-lit", "true");
-
       const flame = candle.querySelector(".flame");
-      if (flame) {
-        flame.style.display = "block";
-        flame.style.animation = "";
-      }
+      if (flame) flame.style.display = "block";
     });
 
     cakeNote.textContent = "อธิษฐานก่อนเป่าเทียน 🎂";
     blowBtn.classList.remove("hide");
     candlesBlown = false;
+    blowBtn.textContent = "เป่าเทียน 🎂";
   }
 
   function hideCakeStage() {
@@ -103,7 +103,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function showCakeStage() {
     slideshowWrap.classList.add("hide");
-
     setTimeout(() => {
       cakeStage.classList.add("show");
       cakeShown = true;
@@ -121,7 +120,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     message.textContent = messages[0];
     message.style.opacity = "1";
-    message.style.transform = "translateY(0)";
 
     showingA = true;
     slideshowWrap.classList.remove("hide");
@@ -130,12 +128,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function updateMessage(index) {
     message.style.opacity = "0";
-    message.style.transform = "translateY(10px)";
-
     setTimeout(() => {
       message.textContent = messages[index];
       message.style.opacity = "1";
-      message.style.transform = "translateY(0)";
     }, 180);
   }
 
@@ -151,194 +146,196 @@ document.addEventListener("DOMContentLoaded", function () {
     resetClasses(nextImg);
     resetClasses(currentImg);
 
-    nextImg.classList.add("stack");
-    void nextImg.offsetWidth;
-
     currentImg.classList.add("leaving");
-    nextImg.classList.remove("stack");
     nextImg.classList.add("entering");
 
     updateMessage(index);
 
     setTimeout(() => {
       resetClasses(currentImg);
-      currentImg.classList.add("stack");
-
       resetClasses(nextImg);
       nextImg.classList.add("active");
 
       showingA = !showingA;
       isAnimating = false;
-      updateButtons()
-
-
-    }, 820);
-  }
-
-  function resetAll() {
-    currentIndex = 0;
-    isAnimating = false;
-    cakeShown = false;
-    candlesBlown = false;
-
-    imgA.src = "";
-    imgB.src = "";
-
-    resetClasses(imgA);
-    resetClasses(imgB);
-
-    message.textContent = "";
-    message.style.opacity = "0";
-    message.style.transform = "translateY(10px)";
-
-    slideshowWrap.classList.remove("hide");
-    cakeStage.classList.remove("show");
-
-    resetCandles();
-    hidePolaroidPopup();
-  }
-
-  function updateDots() {
-    pinDots.forEach((dot, index) => {
-      dot.classList.toggle("active", index < input.length);
-    });
-  }
-
-  function checkPassword() {
-    if (input === CORRECT_PASSWORD) {
-      errorText.textContent = "";
-      lockScreen.style.display = "none";
-
-      setTimeout(() => {
-        page.classList.add("show");
-      }, 50);
-    } else {
-      errorText.textContent = "วันเกิดไม่ถูกต้องนะ ❌";
-      input = "";
-      updateDots();
-    }
+      updateButtons();
+    }, 800);
   }
 
   function updateButtons() {
-    if (!prevBtn) return;
-
-    const isDisabled = currentIndex === 0 && !cakeShown;
-
-    prevBtn.style.opacity = isDisabled ? "0.3" : "1";
-    prevBtn.disabled = isDisabled; // ✅ ใส่ตรงนี้
+    const disabled = currentIndex === 0 && !cakeShown;
+    prevBtn.style.opacity = disabled ? "0.3" : "1";
+    prevBtn.disabled = disabled;
   }
 
-  if (polaroidClose) {
-    polaroidClose.addEventListener("click", hidePolaroidPopup);
+  // =====================
+  // SWIPE SYSTEM (FIXED)
+  // =====================
+
+  function handleSwipeEnd() {
+    const threshold = 80;
+
+    slideshowWrap.style.transition = "transform 0.3s ease";
+
+    if (diffX < -threshold) {
+      slideshowWrap.style.transform = "translateX(-100%) rotate(-10deg)";
+      setTimeout(() => {
+        nextBtn.click();
+        resetPosition();
+      }, 200);
+    } else if (diffX > threshold) {
+      slideshowWrap.style.transform = "translateX(100%) rotate(10deg)";
+      setTimeout(() => {
+        prevBtn.click();
+        resetPosition();
+      }, 200);
+    } else {
+      resetPosition();
+    }
   }
 
-  if (polaroidOverlay) {
-    polaroidOverlay.addEventListener("click", hidePolaroidPopup);
+  function resetPosition() {
+    slideshowWrap.style.transition = "transform 0.3s ease";
+    slideshowWrap.style.transform = "translateX(0)";
+    diffX = 0;
   }
 
-  btn.addEventListener("click", function () {
+  slideshowWrap.addEventListener("pointerdown", (e) => {
+    if (!isOpen || isAnimating) return;
+
+    isDragging = true;
+    startX = e.clientX;
+    slideshowWrap.style.transition = "none";
+  });
+
+  slideshowWrap.addEventListener("pointermove", (e) => {
+    if (!isDragging) return;
+
+    currentX = e.clientX;
+    diffX = currentX - startX;
+
+    const rotate = (diffX / 300) * 12;
+    const curveY = Math.abs(diffX) * 0.15;
+
+    slideshowWrap.style.transform = `
+      translateX(${diffX}px)
+      translateY(${curveY}px)
+      rotate(${rotate}deg)
+    `;
+  });
+
+  slideshowWrap.addEventListener("pointerup", () => {
+    if (!isDragging) return;
+    isDragging = false;
+    handleSwipeEnd();
+  });
+
+  slideshowWrap.addEventListener("pointerleave", () => {
+    isDragging = false;
+    resetPosition();
+  });
+
+  // =====================
+  // EVENTS
+  // =====================
+
+  btn.addEventListener("click", () => {
     if (!isOpen) {
       currentIndex = 0;
       showFirstSlide();
-      updateButtons();
       cardShell.classList.add("open");
       btn.textContent = "ปิดการ์ด 🎁";
       isOpen = true;
     } else {
       cardShell.classList.remove("open");
       btn.textContent = "เปิดการ์ด 🎉";
-      resetAll();
       isOpen = false;
     }
   });
 
-nextBtn.addEventListener("click", function () {
-  if (!isOpen || isAnimating || cakeShown) return;
+  nextBtn.addEventListener("click", () => {
+    if (!isOpen || isAnimating || cakeShown) return;
 
-  // ถ้าอยู่รูปสุดท้ายแล้ว ให้กดอีกครั้งเพื่อไปหน้าเค้ก
-  if (currentIndex === images.length - 1) {
-    showCakeStage();
-    return;
-  }
+    if (currentIndex === images.length - 1) {
+      showCakeStage();
+      return;
+    }
 
-  currentIndex += 1;
-  updateCardContent(currentIndex);
-  updateButtons();
-});
+    currentIndex++;
+    updateCardContent(currentIndex);
+  });
 
-prevBtn.addEventListener("click", function () {
-  if (!isOpen || isAnimating) return;
+  prevBtn.addEventListener("click", () => {
+    if (!isOpen || isAnimating) return;
 
-  // ถ้าอยู่หน้าเค้ก → ย้อนกลับไป slideshow
-  if (cakeShown) {
-    cakeStage.classList.remove("show");
-
-    setTimeout(() => {
+    if (cakeShown) {
+      cakeStage.classList.remove("show");
       slideshowWrap.classList.remove("hide");
       cakeShown = false;
-    }, 300);
+      return;
+    }
 
+    if (currentIndex === 0) return;
+
+    currentIndex--;
+    updateCardContent(currentIndex);
+  });
+
+blowBtn.addEventListener("click", () => {
+
+  // 👉 ถ้าเป่าแล้ว = กดเพื่อเปิดรูป
+  if (candlesBlown) {
+    showPolaroidPopup();
     return;
   }
 
-  // ถ้าอยู่รูปแรกแล้ว ไม่ต้องทำอะไร
-  if (currentIndex === 0) return;
+  // 👉 เป่าเทียน
+  candlesBlown = true;
 
-  currentIndex -= 1;
-  updateCardContent(currentIndex);
-  updateButtons();
-});
-
-  blowBtn.addEventListener("click", function () {
-    if (candlesBlown) return;
-    candlesBlown = true;
-
-    const candles = document.querySelectorAll(".candle");
-
-    candles.forEach((candle, index) => {
-      setTimeout(() => {
-        candle.classList.add("off");
-        candle.setAttribute("data-lit", "false");
-
-        const flame = candle.querySelector(".flame");
-        if (flame) {
-          flame.style.display = "none";
-          flame.style.animation = "none";
-        }
-      }, index * 200 + Math.random() * 120);
-    });
-
+  document.querySelectorAll(".candle").forEach((candle, i) => {
     setTimeout(() => {
-      cakeNote.textContent = "สุขสันต์วันเกิดอีกครั้ง 🎉";
-      message.textContent = "ขอให้ทุกวันเต็มไปด้วยรอยยิ้มและความสุข 💖";
-      message.style.opacity = "1";
-      message.style.transform = "translateY(0)";
-
-      blowBtn.classList.add("hide");
-
-      setTimeout(() => {
-        showPolaroidPopup();
-      }, 500);
-    }, candles.length * 200 + 200);
+      candle.classList.add("off");
+    }, i * 200);
   });
+
+  setTimeout(() => {
+    // 👇 เปลี่ยนข้อความ
+    cakeNote.textContent = "สุขสันต์วันเกิดอีกครั้ง 🎉";
+    message.textContent = "ขอให้ทุกวันเต็มไปด้วยรอยยิ้ม 💖";
+
+    // 👇 🔥 เปิด popup อัตโนมัติ
+    showPolaroidPopup();
+
+    // 👇 เปลี่ยนปุ่ม (ไว้กดดูซ้ำ)
+    blowBtn.textContent = "เปิดดูรูป 📸";
+
+  }, 1200);
+});
 
   buttons.forEach((btn) => {
     btn.addEventListener("click", () => {
       if (input.length >= 6) return;
-
       input += btn.dataset.num;
-      updateDots();
+
+      pinDots.forEach((dot, i) => {
+        dot.classList.toggle("active", i < input.length);
+      });
 
       if (input.length === 6) {
-        checkPassword();
+        if (input === CORRECT_PASSWORD) {
+          lockScreen.style.display = "none";
+          page.classList.add("show");
+        } else {
+          input = "";
+        }
       }
     });
   });
 
-  if (deleteBtn) {
-    deleteBtn.addEventListener("click", () => {
-      input = input.slice(0, -1);
-      updateDots();
-    });
-  }
+  deleteBtn?.addEventListener("click", () => {
+    input = input.slice(0, -1);
+  });
+
+  polaroidClose?.addEventListener("click", hidePolaroidPopup);
+  polaroidOverlay?.addEventListener("click", hidePolaroidPopup);
 });
