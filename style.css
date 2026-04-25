@@ -1580,3 +1580,14 @@ body {
   width: 100%;
   touch-action: manipulation; /* 👈 แทน none */
 }
+
+.shake {
+  animation: shake 0.35s ease;
+}
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  50% { transform: translateX(6px); }
+  75% { transform: translateX(-4px); }
+}

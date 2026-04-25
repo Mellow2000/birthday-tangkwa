@@ -321,20 +321,37 @@ blowBtn.addEventListener("click", () => {
         dot.classList.toggle("active", i < input.length);
       });
 
-      if (input.length === 6) {
-        if (input === CORRECT_PASSWORD) {
-          lockScreen.style.display = "none";
-          page.classList.add("show");
-        } else {
+    if (input.length === 6) {
+      if (input === CORRECT_PASSWORD) {
+
+        lockScreen.style.opacity = "0";
+        lockScreen.style.visibility = "hidden";
+
+        page.classList.add("show");
+
+      } else {
+
+        // ❌ animation error เล็กน้อย
+        errorText.textContent = "วันเกิดไม่ถูกต้อง";
+
+        pinDots.forEach(dot => dot.classList.remove("active"));
+
+        setTimeout(() => {
+          errorText.textContent = "";
           input = "";
-        }
+        }, 1000);
       }
+    }
     });
   });
 
-  deleteBtn?.addEventListener("click", () => {
-    input = input.slice(0, -1);
+deleteBtn?.addEventListener("click", () => {
+  input = input.slice(0, -1);
+
+  pinDots.forEach((dot, i) => {
+    dot.classList.toggle("active", i < input.length);
   });
+});
 
   polaroidClose?.addEventListener("click", hidePolaroidPopup);
   polaroidOverlay?.addEventListener("click", hidePolaroidPopup);
