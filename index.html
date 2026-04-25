@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Birthday TangKwa</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="background-glow glow-1"></div>
+  <div class="background-glow glow-2"></div>
+
+<div class="lock-screen" id="lockScreen">
+  <div class="lock-box">
+    <h2>รหัสวันเกิด 🎁</h2>
+    <!-- จุดแสดง ●●●● -->
+    <div class="pin-display" id="pinDisplay">
+      <span></span><span></span><span></span>
+      <span></span><span></span><span></span>
+    </div>
+
+    <!-- keypad -->
+    <div class="keypad">
+      <button data-num="1">1</button>
+      <button data-num="2">2</button>
+      <button data-num="3">3</button>
+
+      <button data-num="4">4</button>
+      <button data-num="5">5</button>
+      <button data-num="6">6</button>
+
+      <button data-num="7">7</button>
+      <button data-num="8">8</button>
+      <button data-num="9">9</button>
+
+      <div></div>
+      <button data-num="0">0</button>
+      <button id="deleteBtn">⌫</button>
+    </div>
+
+    <p class="error-text" id="errorText"></p>
+  </div>
+</div>
+
+  <div class="page">
+    <div class="card-wrapper">
+      <div class="card-shell" id="cardShell">
+        <div class="card-back"></div>
+
+        <div class="card-front">
+          <div class="ribbon ribbon-horizontal"></div>
+          <div class="ribbon ribbon-vertical"></div>
+          <div class="bow">
+            <span class="bow-left"></span>
+            <span class="bow-center"></span>
+            <span class="bow-right"></span>
+          </div>
+
+          <div class="front-content">
+            <p class="mini-text">special for you</p>
+            <h1>Happy Birthday</h1>
+            <p class="sub-text">🎂 TANGKWA 🎂</p>
+          </div>
+        </div>
+
+        <div class="card-inside" id="cardInside">
+          <div class="inside-top">
+            <div class="inside-tag">Birthday Wish</div>
+            <div class="inside-title">To My Favorite Tangkwa ✨</div>
+          </div>
+
+          <div class="slideshow-wrap" id="slideshowWrap">
+            <div class="image-frame">
+              <img id="imgA" class="slide-image active" src="" alt="Birthday Image A" />
+              <img id="imgB" class="slide-image" src="" alt="Birthday Image B" />
+            </div>
+
+            <div class="message" id="message"></div>
+
+            <button class="prev-btn" id="prevBtn">⬅ ย้อนกลับ</button>
+            <button class="next-btn" id="nextBtn">ถัดไป ➜</button>
+          </div>
+
+          <div class="cake-stage" id="cakeStage">
+            <div class="cake-big" id="cakeBig">
+              <div class="candles">
+                <div class="candle" data-lit="true">
+                  <div class="flame"></div>
+                </div>
+                <div class="candle" data-lit="true">
+                  <div class="flame"></div>
+                </div>
+                <div class="candle" data-lit="true">
+                  <div class="flame"></div>
+                </div>
+                <div class="candle" data-lit="true">
+                  <div class="flame"></div>
+                </div>
+                <div class="candle" data-lit="true">
+                  <div class="flame"></div>
+                </div>
+              </div>
+
+              <div class="cake-big-top"></div>
+              <div class="cake-big-body"></div>
+              <div class="cake-big-cream"></div>
+              <div class="cake-big-base"></div>
+            </div>
+
+            <div class="cake-note" id="cakeNote">กดปุ่มเพื่อเป่าเทียน 🎂</div>
+            <button class="blow-btn" id="blowBtn">เป่าเทียน 💨</button>
+          </div>
+        </div>
+      </div>
+
+      <button class="main-btn" id="btn">เปิดการ์ด 🎉</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <div class="polaroid-popup" id="polaroidPopup">
+  <div class="polaroid-overlay" id="polaroidOverlay"></div>
+
+  <div class="polaroid-card">
+    <button class="polaroid-close" id="polaroidClose">×</button>
+
+    <div class="polaroid-photo-wrap">
+      <img
+        id="polaroidImg"
+        src="https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=900&q=80"
+        alt="Special memory"
+      />
+    </div>
+
+    <div class="polaroid-caption" id="polaroidCaption">
+      สุขสันต์วันเกิดนะ 💖 ขอให้ปีนี้เต็มไปด้วยรอยยิ้ม ความสุข และเรื่องดีๆ
+    </div>
+  </div>
+</div>
+</body>
+</html>
