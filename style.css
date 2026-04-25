@@ -1569,3 +1569,13 @@ body {
   transform: scale(0.95);
 }
 
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  position: fixed;
+  width: 100%;
+  touch-action: none;
+}
