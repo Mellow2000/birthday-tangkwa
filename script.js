@@ -24,6 +24,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const pinDots = document.querySelectorAll(".pin-display span");
   const errorText = document.getElementById("errorText");
 
+  const introPopup = document.getElementById("introPopup");
+  const introOkBtn = document.getElementById("introOkBtn");
+  const introCancelBtn = document.getElementById("introCancelBtn");
+
   let isOpen = false;
   let currentIndex = 0;
   let showingA = true;
@@ -353,6 +357,27 @@ deleteBtn?.addEventListener("click", () => {
   });
 });
 
+
   polaroidClose?.addEventListener("click", hidePolaroidPopup);
   polaroidOverlay?.addEventListener("click", hidePolaroidPopup);
+
+introOkBtn.addEventListener("click", () => {
+  introPopup.classList.add("hide");
+
+  setTimeout(() => {
+    introPopup.style.display = "none";
+    lockScreen.style.display = "flex";
+  }, 300);
+});
+
+  introCancelBtn.addEventListener("click", () => {
+    introPopup.classList.add("hide");
+
+    setTimeout(() => {
+      window.close();
+
+      // fallback (บาง browser จะไม่ยอมปิดเอง)
+      window.location.href = "about:blank";
+    }, 200);
+  });
 });
